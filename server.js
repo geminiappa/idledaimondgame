@@ -6,7 +6,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const mongoURI = 'mongodb+srv://admin:Dapo321@#$@idlegamebot.jxmmirj.mongodb.net/?retryWrites=true&w=majority';
+const mongoURI = 'mongodb+srv://admin:Dapo2026@idlegamebot.jxmmirj.mongodb.net/?retryWrites=true&w=majority';
 
 mongoose.connect(mongoURI)
     .then(() => console.log('✅ MongoDB подключена!'))
@@ -48,4 +48,5 @@ app.post('/api/upgrade', async (req, res) => {
 });
 
 app.listen(process.env.PORT || 10000);
+
 
