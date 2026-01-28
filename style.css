@@ -1,0 +1,26 @@
+body {
+    background: #1a1a1a;
+    color: #00f2ff;
+    text-align: center;
+    font-family: sans-serif;
+}
+#main-clicker {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: #333;
+    border: 5px solid #00f2ff;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    box-shadow: 0 0 20px #00f2ff;
+}
+.shop button {
+    display: block;
+    width: 80%;
+    margin: 10px auto;
+    padding: 10px;
+    background: #222;
+    color: #ffcc00;
+    border: 1px solid #ffcc00;
+}
