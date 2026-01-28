@@ -73,7 +73,7 @@ function showTab(tabId, btn) {
 }
 
 function inviteFriend() {
-    const botUser = 'ТВОЙ_БОТ_USERNAME'; // ВПИШИ ИМЯ БОТА БЕЗ @
+    const botUser = '@idledaimondbot'; // ВПИШИ ИМЯ БОТА БЕЗ @
     const url = `https://t.me/${botUser}?start=${USER_ID}`;
     const share = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=Стань моим напарником в шахте!`;
     tg.openTelegramLink(share);
@@ -90,6 +90,7 @@ window.onload = () => {
     loadGame();
     document.getElementById('diamond').addEventListener('click', clickDiamond);
 };
+
 
 
 
