@@ -1,34 +1,21 @@
 const tg = window.Telegram.WebApp;
 tg.expand();
 
-const USER_ID = tg.initDataUnsafe?.user?.id ? tg.initDataUnsafe.user.id.toString() : 'guest';
-const API_URL = 'https://idledaimondgame.onrender.com/api';
+const USER_ID = tg.initDataUnsafe?.user?.id?.toString() || 'guest';
+const FIRST_NAME = tg.initDataUnsafe?.user?.first_name || "Шахтер";
+const REF_ID = tg.initDataUnsafe?.start_param || null;
 
+const API_URL = 'https://idledaimondgame.onrender.com/api';
 let diamonds = 0;
 let upgradeLevel = 1;
 
-// Переключение вкладок
-function showTab(tabId, el) {
-    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    document.getElementById(tabId).classList.add('active');
-    el.classList.add('active');
-}
-
-// Функция приглашения друга
-function inviteFriend() {
-    const botUsername = 'IDLE_YOUR_BOT_USERNAME'; // ЗАМЕНИ НА ЮЗЕРНЕЙМ СВОЕГО БОТА
-    const text = `Помоги мне копать алмазы! Залетай в игру!`;
-    const url = `https://t.me/share/url?url=https://t.me/${botUsername}?start=${USER_ID}&text=${encodeURIComponent(text)}`;
-    tg.openTelegramLink(url);
-}
-
 async function loadGame() {
     try {
-        const res = await fetch(`${API_URL}/diamonds?userId=${USER_ID}`);
+        const res = await fetch(`${API_URL}/diamonds?userId=${USER_ID}&refId=${REF_ID}`);
         const data = await res.json();
         diamonds = data.diamonds;
         upgradeLevel = data.upgradeLevel;
+        document.getElementById('display-id').innerText = USER_ID;
         updateUI();
     } catch (e) { console.error(e); }
 }
@@ -57,22 +44,52 @@ async function buyUpgrade() {
             diamonds = data.diamonds;
             upgradeLevel = data.upgradeLevel;
             updateUI();
-        } else { tg.showAlert("Недостаточно алмазов!"); }
+        } else { alert("Маловато алмазов!"); }
     } catch (e) { console.error(e); }
+}
+
+async function loadReferrals() {
+    const list = document.getElementById('ref-list');
+    try {
+        const res = await fetch(`${API_URL}/referrals?userId=${USER_ID}`);
+        const friends = await res.json();
+        document.getElementById('ref-count').innerText = friends.length;
+        list.innerHTML = friends.length ? '' : '<p style="opacity:0.5">Друзей пока нет</p>';
+        friends.forEach(f => {
+            const item = document.createElement('div');
+            item.className = 'ref-item';
+            item.innerHTML = `👤 ID: ${f.userId} <span>+1000 💎</span>`;
+            list.appendChild(item);
+        });
+    } catch (e) { list.innerHTML = 'Ошибка загрузки'; }
+}
+
+function showTab(tabId, btn) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-link').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    btn.classList.add('active');
+    if (tabId === 'refs') loadReferrals();
+}
+
+function inviteFriend() {
+    const botUser = 'ТВОЙ_БОТ_USERNAME'; // ВПИШИ ИМЯ БОТА БЕЗ @
+    const url = `https://t.me/${botUser}?start=${USER_ID}`;
+    const share = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=Стань моим напарником в шахте!`;
+    tg.openTelegramLink(share);
 }
 
 function updateUI() {
     document.getElementById('score').innerText = Math.floor(diamonds);
     document.getElementById('level').innerText = upgradeLevel;
     document.getElementById('upgradeCost').innerText = upgradeLevel * 50;
-    document.getElementById('user-name').innerText = tg.initDataUnsafe?.user?.first_name || "Шахтер";
+    document.getElementById('user-name').innerText = FIRST_NAME;
 }
 
 window.onload = () => {
     loadGame();
     document.getElementById('diamond').addEventListener('click', clickDiamond);
 };
-
 
 
 
