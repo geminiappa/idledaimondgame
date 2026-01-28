@@ -1,98 +1,51 @@
 body {
-    margin: 0;
-    padding: 0;
-    font-family: 'Segoe UI', sans-serif;
-    background-color: #000;
-    color: white;
-    overflow: hidden;
+    margin: 0; background: #000; color: #fff;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
+    height: 100vh; overflow: hidden;
 }
 
-/* Фон шахты */
-.background-overlay {
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
-                url('https://img.freepik.com/free-photo/view-illuminated-cave-tunnel_23-2151040445.jpg');
-    background-size: cover;
-    background-position: center;
-    z-index: -1;
+.mine-bg {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), 
+                url('https://img.freepik.com/free-photo/illuminated-tunnel-cave_23-2151040445.jpg');
+    background-size: cover; background-position: center; z-index: -1;
 }
 
-.app-container {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    padding: 20px;
-    box-sizing: border-box;
+.app { padding: 20px; display: flex; flex-direction: column; height: 100%; box-sizing: border-box; }
+
+.user-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; font-size: 14px; opacity: 0.8; }
+.avatar { width: 30px; border-radius: 50%; }
+
+.score-container { text-align: center; margin-bottom: 20px; }
+.score-container h1 { font-size: 32px; margin: 0; }
+.subtitle { color: #aaa; margin-top: 5px; }
+
+.glass-card {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(15px);
+    border-radius: 20px; padding: 20px; margin-bottom: 15px;
+    border: 1px solid rgba(255,255,255,0.1);
 }
 
-.header {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    padding: 15px;
-    border-radius: 15px;
-    margin-bottom: 20px;
-}
+.main-card { display: flex; align-items: center; gap: 20px; }
+.diamond-box { width: 90px; height: 90px; background: #fff; border-radius: 15px; padding: 10px; display: flex; align-items: center; }
+.diamond-box img { width: 100%; transition: transform 0.1s; }
+.diamond-box img:active { transform: scale(0.9); }
 
-.stats { display: flex; justify-content: space-around; font-size: 20px; font-weight: bold; margin-top: 10px;}
+.mine-btn { background: #f1c40f; color: #000; border: none; padding: 8px 15px; border-radius: 20px; font-weight: bold; margin-top: 10px; }
 
-.tab-content { display: none; flex-grow: 1; text-align: center; }
-.tab-content.active { display: block; }
+.tabs-nav { display: flex; background: rgba(255,255,255,0.1); border-radius: 12px; margin-bottom: 20px; padding: 4px; }
+.tab-link { flex: 1; background: none; border: none; color: #fff; padding: 10px; border-radius: 10px; font-size: 14px; }
+.tab-link.active { background: rgba(255,255,255,0.2); font-weight: bold; }
 
-.diamond-wrapper {
-    margin: 40px auto;
-    width: 200px;
-    height: 200px;
-    transition: transform 0.1s;
-}
+.tab-content { display: none; height: 100%; }
+.tab-content.active { display: flex; flex-direction: column; }
 
-.diamond-icon { width: 100%; filter: drop-shadow(0 0 15px #00d4ff); }
-.diamond-wrapper:active { transform: scale(0.9); }
+.ref-btn { background: #27ae60; color: #fff; border: none; width: 100%; padding: 15px; border-radius: 15px; font-weight: bold; margin-top: auto; }
 
-.navbar {
-    display: flex;
-    background: rgba(0,0,0,0.8);
-    border-radius: 20px;
-    padding: 10px;
-    margin-bottom: 10px;
-}
+.ref-list-container { max-height: 150px; overflow-y: auto; margin-top: 10px; }
+.ref-item { background: rgba(255,255,255,0.05); padding: 8px; border-radius: 8px; margin-bottom: 5px; display: flex; justify-content: space-between; font-size: 13px; border-left: 3px solid #27ae60; }
 
-.nav-item {
-    flex: 1;
-    background: none;
-    border: none;
-    color: #888;
-    padding: 10px;
-    font-size: 16px;
-}
+.upgrade-row { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+.buy-action { background: #27ae60; border: none; color: #fff; padding: 8px 12px; border-radius: 8px; font-weight: bold; }
 
-.nav-item.active { color: #00d4ff; font-weight: bold; }
-
-.shop-item {
-    background: rgba(255,255,255,0.05);
-    padding: 15px;
-    border-radius: 12px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-.buy-btn {
-    background: #0088cc;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 8px;
-    font-weight: bold;
-}
-
-.invite-btn {
-    background: #28a745;
-    color: white;
-    border: none;
-    padding: 15px;
-    border-radius: 12px;
-    width: 100%;
-    font-size: 16px;
-}
