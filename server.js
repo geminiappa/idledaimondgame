@@ -6,12 +6,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Твоя ссылка на базу (пароль Dapo2026)
+// Подключение к твоей базе MongoDB (пароль Dapo2026)
 const mongoURI = 'mongodb+srv://admin:Dapo2026@idlegamebot.jxmmirj.mongodb.net/myGameDatabase?retryWrites=true&w=majority';
 
 mongoose.connect(mongoURI)
-    .then(() => console.log('✅ MongoDB подключена!'))
-    .catch(err => console.error('❌ Ошибка подключения:', err));
+    .then(() => console.log('✅ База MongoDB подключена!'))
+    .catch(err => console.error('❌ Ошибка подключения к базе:', err));
 
 const playerSchema = new mongoose.Schema({
     userId: { type: String, required: true, unique: true },
@@ -22,18 +22,20 @@ const playerSchema = new mongoose.Schema({
 
 const Player = mongoose.model('Player', playerSchema);
 
-// Получение данных игрока и обработка реферала при первом входе
+// Получение данных игрока и обработка реферальной ссылки
 app.get('/api/diamonds', async (req, res) => {
     const { userId, refId } = req.query;
     try {
         let player = await Player.findOne({ userId });
+        
         if (!player) {
             player = new Player({ userId });
-            // Если игрок пришел по ссылке друга
+            
+            // Логика реферала: если пришел по ссылке и это не он сам
             if (refId && refId !== userId) {
                 const referrer = await Player.findOne({ userId: refId });
                 if (referrer) {
-                    referrer.diamonds += 1000; // Бонус пригласившему
+                    referrer.diamonds += 1000; // Начисляем бонус пригласившему
                     await referrer.save();
                     player.referredBy = refId;
                 }
@@ -44,7 +46,7 @@ app.get('/api/diamonds', async (req, res) => {
     } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-// Клик
+// Сохранение кликов
 app.post('/api/click', async (req, res) => {
     const { userId, amount } = req.body;
     try {
@@ -57,22 +59,25 @@ app.post('/api/click', async (req, res) => {
     } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-// Апгрейд
+// Покупка апгрейда
 app.post('/api/upgrade', async (req, res) => {
     const { userId } = req.body;
     try {
         let player = await Player.findOne({ userId });
         const cost = player.upgradeLevel * 50;
+        
         if (player && player.diamonds >= cost) {
             player.diamonds -= cost;
             player.upgradeLevel += 1;
             await player.save();
             res.json(player);
-        } else { res.status(400).json({ error: 'Недостаточно алмазов' }); }
+        } else {
+            res.status(400).json({ error: 'Недостаточно алмазов' });
+        }
     } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-// Список рефералов
+// Список рефералов для раздела "Друзья"
 app.get('/api/referrals', async (req, res) => {
     const { userId } = req.query;
     try {
@@ -83,6 +88,3 @@ app.get('/api/referrals', async (req, res) => {
 
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => console.log(`🚀 Сервер запущен на порту ${PORT}`));
-
-
-
