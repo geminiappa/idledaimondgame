@@ -2,43 +2,51 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Diamond Clicker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Diamond Mine</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    
     <link rel="stylesheet" href="style.css">
-    <style>
-        body { text-align: center; background: #1a1a1a; color: white; font-family: sans-serif; margin: 0; padding: 20px; }
-        .diamond-clicker { margin: 30px auto; width: 200px; height: 200px; display: flex; align-items: center; justify-content: center; }
-        .diamond-clicker img { 
-            width: 100%; 
-            cursor: pointer; 
-            transition: transform 0.1s; 
-            user-select: none;
-            -webkit-user-drag: none;
-        }
-        .diamond-clicker img:active { transform: scale(0.95); }
-        .shop { margin-top: 20px; padding: 15px; border: 1px solid #444; display: inline-block; border-radius: 10px; background: #2a2a2a; }
-        button { padding: 10px 20px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 5px; font-weight: bold; }
-        button:hover { background: #0056b3; }
-        #user-name { color: #0088cc; font-weight: bold; margin-bottom: 10px; }
-    </style>
 </head>
 <body>
+    <div class="background-overlay"></div>
+    
+    <div class="app-container">
+        <div class="header">
+            <div id="user-name">Загрузка...</div>
+            <div class="stats">
+                <div class="stat-item">💎 <span id="score">0</span></div>
+                <div class="stat-item">⛏️ <span id="level">1</span> lvl</div>
+            </div>
+        </div>
 
-    <div id="user-name">Загрузка игрока...</div>
+        <div id="mine-section" class="tab-content active">
+            <div class="diamond-wrapper" id="diamond">
+                <img src="https://cdn-icons-png.flaticon.com/512/599/599405.png" class="diamond-icon">
+            </div>
+            <button class="invite-btn" onclick="inviteFriend()">🤝 Пригласить друга (+1000 💎)</button>
+        </div>
 
-    <h1>Алмазы: <span id="score">0</span></h1>
-    <p>Сила клика: <span id="level">1</span></p>
+        <div id="boost-section" class="tab-content">
+            <h2>Магазин улучшений</h2>
+            <div class="shop-item">
+                <div class="item-info">
+                    <span class="item-title">Улучшить кирку</span>
+                    <span class="item-desc">Клик приносит больше</span>
+                </div>
+                <button onclick="buyUpgrade()" class="buy-btn">
+                    <span id="upgradeCost">50</span> 💎
+                </button>
+            </div>
+            <div class="bonus-card">
+                <h3>Бонусы</h3>
+                <p>Пригласи друга и получи 1000 алмазов моментально!</p>
+            </div>
+        </div>
 
-    <div class="diamond-clicker" id="diamond">
-        <img src="https://cdn-icons-png.flaticon.com/512/599/599405.png" alt="Diamond">
-    </div>
-
-    <div class="shop">
-        <h3>Магазин бустов</h3>
-        <p>Цена улучшения: <span id="upgradeCost">50</span> 💎</p>
-        <button onclick="buyUpgrade()">Купить Улучшение</button>
+        <div class="navbar">
+            <button class="nav-item active" onclick="showTab('mine-section', this)">⛏️ Копать</button>
+            <button class="nav-item" onclick="showTab('boost-section', this)">🚀 Бусты</button>
+        </div>
     </div>
 
     <script src="script.js"></script>
