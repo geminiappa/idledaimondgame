@@ -1,10 +1,18 @@
+// Инициализация Telegram WebApp
+const tg = window.Telegram.WebApp;
+tg.expand(); // Развернуть на весь экран
+
+// Получаем реальный ID пользователя из Telegram, если его нет — ставим 'guest'
+const USER_ID = tg.initDataUnsafe?.user?.id ? tg.initDataUnsafe.user.id.toString() : 'guest';
+
 const API_URL = 'https://idledaimondgame.onrender.com/api';
 let diamonds = 0;
 let upgradeLevel = 1;
 
 async function loadGame() {
     try {
-        const res = await fetch(`${API_URL}/diamonds`);
+        // Передаем USER_ID в запросе
+        const res = await fetch(`${API_URL}/diamonds?userId=${USER_ID}`);
         const data = await res.json();
         diamonds = data.diamonds;
         upgradeLevel = data.upgradeLevel;
@@ -19,14 +27,18 @@ async function clickDiamond() {
         await fetch(`${API_URL}/click`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ amount: upgradeLevel })
+            body: JSON.stringify({ userId: USER_ID, amount: upgradeLevel }) // Отправляем ID
         });
     } catch (e) { console.error("Ошибка сохранения:", e); }
 }
 
 async function buyUpgrade() {
     try {
-        const res = await fetch(`${API_URL}/upgrade`, { method: 'POST' });
+        const res = await fetch(`${API_URL}/upgrade`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId: USER_ID }) // Отправляем ID
+        });
         if (res.ok) {
             const data = await res.json();
             diamonds = data.diamonds;
@@ -42,13 +54,9 @@ function updateUI() {
     document.getElementById('level').innerText = upgradeLevel;
 }
 
-// Привязываем клик к картинке правильно
 window.onload = () => {
     loadGame();
-    const diamondBtn = document.getElementById('diamond');
-    if (diamondBtn) {
-        diamondBtn.addEventListener('click', clickDiamond);
-    }
+    document.getElementById('diamond').addEventListener('click', clickDiamond);
 };
 
 
