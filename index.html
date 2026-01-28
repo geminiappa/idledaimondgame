@@ -3,32 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Idle Diamond Game</title>
+    <title>Diamond Clicker</title>
     <link rel="stylesheet" href="style.css">
-    <style>
-        /* Добавим стили прямо сюда, чтобы картинка точно была видна */
-        .diamond-clicker img {
-            width: 150px;
-            cursor: pointer;
-            transition: transform 0.1s;
-            user-select: none;
-            -webkit-user-drag: none;
-        }
-        .diamond-clicker img:active { transform: scale(0.9); }
-    </style>
 </head>
-<body>
-    <div class="game-container" style="text-align: center; margin-top: 50px;">
-        <h1>Алмазы: <span id="score">0</span></h1>
-        
-        <div id="diamond" class="diamond-clicker">
-            <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/main/Objects/Gem%20Stone.png" alt="Diamond">
-        </div>
+<body style="text-align: center; background: #1a1a1a; color: white; font-family: sans-serif;">
 
-        <p>Нажимай на алмаз!</p>
+    <h1>Алмазы: <span id="score">0</span></h1>
+    <p>Сила клика: <span id="level">1</span></p>
+
+    <div id="diamond" onclick="clickDiamond()" style="cursor:pointer; margin: 20px;">
+        <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/main/Objects/Gem%20Stone.png" width="150">
+    </div>
+
+    <div style="margin-top: 20px; padding: 15px; border: 1px solid #444; display: inline-block; border-radius: 10px;">
+        <h3>Магазин бустов</h3>
+        <p>Цена улучшения: <span id="upgradeCost">50</span> 💎</p>
+        <button onclick="buyUpgrade()" style="padding: 10px 20px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 5px;">Купить Улучшение</button>
     </div>
 
     <script src="script.js"></script>
 </body>
 </html>
+
 
