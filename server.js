@@ -3,63 +3,61 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 
 const app = express();
-
-// Разрешаем фронтенду (Vercel) обращаться к этому серверу
-app.use(cors());
+app.use(cors()); // Разрешаем запросы с других доменов (Vercel)
 app.use(express.json());
 
-// --- НАСТРОЙКА БАЗЫ ДАННЫХ ---
-// Замени 'ССЫЛКА_ИЗ_MONGODB_ATLAS' на свою реальную строку подключения
-const mongoURI = 'mongodb+srv://admin:Dapo2026@idlegamebot.jxmmirj.mongodb.net/?retryWrites=true&w=majority'; 
+// Твоя исправленная ссылка (БЕЗ скобок < >)
+const mongoURI = 'mongodb+srv://admin:Dapo321@#$@idlegamebot.jxmmirj.mongodb.net/?retryWrites=true&w=majority';
 
 mongoose.connect(mongoURI)
     .then(() => console.log('✅ MongoDB подключена!'))
     .catch(err => console.error('❌ Ошибка подключения к БД:', err));
 
-// --- СХЕМА ИГРОКА ---
+// Схема данных игрока
 const playerSchema = new mongoose.Schema({
-    tgId: { type: Number, unique: true }, // ID пользователя из Telegram
-    name: String,                         // Имя пользователя
-    diamonds: { type: Number, default: 0 },
-    income: { type: Number, default: 0 },
-    lastSync: { type: Number, default: Date.now }
+    userId: { type: String, default: 'guest' },
+    diamonds: { type: Number, default: 0 }
 });
 
 const Player = mongoose.model('Player', playerSchema);
 
-// --- API ЭНДПОИНТЫ ---
-
-// 1. Синхронизация данных (сохранение/загрузка)
-app.post('/api/sync', async (req, res) => {
-    const { tgId, name, diamonds, income } = req.body;
+// Маршрут для получения количества алмазов
+app.get('/api/diamonds', async (req, res) => {
     try {
-        let player = await Player.findOneAndUpdate(
-            { tgId },
-            { name, diamonds, income, lastSync: Date.now() },
-            { upsert: true, new: true }
-        );
+        let player = await Player.findOne({ userId: 'guest' });
+        if (!player) {
+            player = await Player.create({ userId: 'guest', diamonds: 0 });
+        }
         res.json(player);
     } catch (err) {
-        res.status(500).json({ error: 'Ошибка сохранения данных' });
+        res.status(500).json({ error: err.message });
     }
 });
 
-// 2. Лидерборд (Топ-10 игроков)
-app.get('/api/leaderboard', async (req, res) => {
+// Маршрут для сохранения клика
+app.post('/api/click', async (req, res) => {
     try {
-        const topPlayers = await Player.find()
-            .sort({ diamonds: -1 })
-            .limit(10);
-        res.json(topPlayers);
+        let player = await Player.findOne({ userId: 'guest' });
+        if (!player) {
+            player = await Player.create({ userId: 'guest', diamonds: 1 });
+        } else {
+            player.diamonds += 1;
+            await player.save();
+        }
+        res.json(player);
     } catch (err) {
-        res.status(500).json({ error: 'Ошибка загрузки лидерборда' });
+        res.status(500).json({ error: err.message });
     }
 });
 
-// --- ЗАПУСК СЕРВЕРА ---
-const PORT = process.env.PORT || 3000;
+// Тестовый маршрут для проверки работы сервера
+app.get('/', (req, res) => {
+    res.send('🚀 Сервер игры работает и готов принимать клики!');
+});
+
+const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => {
     console.log(`🚀 Сервер запущен на порту ${PORT}`);
-
 });
+
 
