@@ -21,14 +21,13 @@ const playerSchema = new mongoose.Schema({
 
 const Player = mongoose.model('Player', playerSchema);
 
-// Загрузка игрока и логика реферала
+// Загрузка игрока и фиксация реферала
 app.get('/api/diamonds', async (req, res) => {
     const { userId, refId } = req.query;
     try {
         let player = await Player.findOne({ userId });
         if (!player) {
             player = new Player({ userId });
-            // Если пришел по ссылке другого игрока
             if (refId && refId !== userId) {
                 const referrer = await Player.findOne({ userId: refId });
                 if (referrer) {
@@ -71,7 +70,7 @@ app.post('/api/upgrade', async (req, res) => {
     } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-// Список приглашенных друзей
+// Список рефералов
 app.get('/api/referrals', async (req, res) => {
     const { userId } = req.query;
     try {
@@ -81,4 +80,4 @@ app.get('/api/referrals', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 10000;
-app.listen(PORT, () => console.log(`🚀 Server on port ${PORT}`));
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
