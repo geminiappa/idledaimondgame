@@ -5,20 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Diamond Clicker</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        body { text-align: center; background: #1a1a1a; color: white; font-family: sans-serif; }
+        .diamond-clicker { margin: 30px auto; width: 200px; height: 200px; display: flex; align-items: center; justify-content: center; }
+        .diamond-clicker img { 
+            width: 100%; 
+            cursor: pointer; 
+            transition: transform 0.1s; 
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+        .diamond-clicker img:active { transform: scale(0.95); }
+        .shop { margin-top: 20px; padding: 15px; border: 1px solid #444; display: inline-block; border-radius: 10px; background: #2a2a2a; }
+        button { padding: 10px 20px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 5px; font-weight: bold; }
+        button:hover { background: #0056b3; }
+    </style>
 </head>
-<body style="text-align: center; background: #1a1a1a; color: white; font-family: sans-serif;">
+<body>
 
     <h1>Алмазы: <span id="score">0</span></h1>
     <p>Сила клика: <span id="level">1</span></p>
 
-    <div id="diamond" onclick="clickDiamond()" style="cursor:pointer; margin: 20px;">
-        <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/main/Objects/Gem%20Stone.png" width="150">
+    <div class="diamond-clicker" id="diamond">
+        <img src="https://cdn-icons-png.flaticon.com/512/599/599405.png" alt="Diamond">
     </div>
 
-    <div style="margin-top: 20px; padding: 15px; border: 1px solid #444; display: inline-block; border-radius: 10px;">
+    <div class="shop">
         <h3>Магазин бустов</h3>
         <p>Цена улучшения: <span id="upgradeCost">50</span> 💎</p>
-        <button onclick="buyUpgrade()" style="padding: 10px 20px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 5px;">Купить Улучшение</button>
+        <button onclick="buyUpgrade()">Купить Улучшение</button>
     </div>
 
     <script src="script.js"></script>
