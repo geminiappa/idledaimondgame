@@ -1,57 +1,44 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Diamond Mine</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div class="background-overlay"></div>
-    
-    <div class="app-container">
-        <div class="header">
-            <div id="user-name">Загрузка...</div>
-            <div class="stats">
-                <div class="stat-item">💎 <span id="score">0</span></div>
-                <div class="stat-item">⛏️ <span id="level">1</span> lvl</div>
-            </div>
-        </div>
+<div class="tabs-nav">
+    <button class="tab-link active" onclick="showTab('mine', this)">⛏️ Шахта</button>
+    <button class="tab-link" onclick="showTab('shop', this)">🚀 Бусты</button>
+    <button class="tab-link" onclick="showTab('refs', this)">👥 Друзья</button>
+</div>
 
-        <div id="mine-section" class="tab-content active">
-            <div class="diamond-wrapper" id="diamond">
-                <img src="https://cdn-icons-png.flaticon.com/512/599/599405.png" class="diamond-icon">
-            </div>
-            <button class="invite-btn" onclick="inviteFriend()">🤝 Пригласить друга (+1000 💎)</button>
+<div id="mine" class="tab-content active">
+    <div class="glass-card main-card">
+        <div class="diamond-box" id="diamond">
+            <img src="https://cdn-icons-png.flaticon.com/512/599/599405.png" alt="Diamond">
         </div>
-
-        <div id="boost-section" class="tab-content">
-            <h2>Магазин улучшений</h2>
-            <div class="shop-item">
-                <div class="item-info">
-                    <span class="item-title">Улучшить кирку</span>
-                    <span class="item-desc">Клик приносит больше</span>
-                </div>
-                <button onclick="buyUpgrade()" class="buy-btn">
-                    <span id="upgradeCost">50</span> 💎
-                </button>
-            </div>
-            <div class="bonus-card">
-                <h3>Бонусы</h3>
-                <p>Пригласи друга и получи 1000 алмазов моментально!</p>
-            </div>
-        </div>
-
-        <div class="navbar">
-            <button class="nav-item active" onclick="showTab('mine-section', this)">⛏️ Копать</button>
-            <button class="nav-item" onclick="showTab('boost-section', this)">🚀 Бусты</button>
+        <div class="card-info">
+            <div>Твой ID: <span class="id-text" id="display-id">...</span></div>
+            <button class="mine-btn">Копать!</button>
         </div>
     </div>
+</div>
 
-    <script src="script.js"></script>
-</body>
-</html>
+<div id="shop" class="tab-content">
+    <div class="glass-card">
+        <h3>Улучшения</h3>
+        <div class="upgrade-row">
+            <span>Прокачка кирки</span>
+            <button onclick="buyUpgrade()" class="buy-action"><span id="upgradeCost">50</span> 💎</button>
+        </div>
+    </div>
+</div>
+
+<div id="refs" class="tab-content">
+    <div class="glass-card">
+        <h3>Твои рефералы: <span id="ref-count">0</span></h3>
+        <div id="ref-list" class="ref-list-container">
+            <p style="opacity: 0.5;">Список пуст...</p>
+        </div>
+    </div>
+    
+    <button class="ref-btn" onclick="inviteFriend()">
+        🤝 Пригласить друга (+1000 💎)
+    </button>
+</div>
+
 
 
 
