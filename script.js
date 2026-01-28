@@ -1,53 +1,37 @@
-let tg = window.Telegram.WebApp;
-tg.expand(); // Развернуть на весь экран
+const tg = window.Telegram.WebApp;
+const user = tg.initDataUnsafe?.user || { id: 0, first_name: "Guest" };
+
+// ССЫЛКА НА ТВОЙ СЕРВЕР (замени после деплоя на Render)
+const API_URL = 'https://idledaimondgame.onrender.com/api';
 
 let diamonds = parseFloat(localStorage.getItem('diamonds')) || 0;
 let income = parseFloat(localStorage.getItem('income')) || 0;
-let lastTick = parseInt(localStorage.getItem('lastTick')) || Date.now();
 
-// Фоновое начисление при входе
-function calculateOffline() {
-    let now = Date.now();
-    let secondsPassed = Math.floor((now - lastTick) / 1000);
-    if (secondsPassed > 0) {
-        let earned = secondsPassed * income;
-        diamonds += earned;
-        if (earned > 0) alert(`Пока тебя не было, добыто: 💎${earned.toFixed(1)}`);
+// Синхронизация с сервером (сохранение)
+async function syncData() {
+    try {
+        await fetch(`${API_URL}/sync`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                tgId: user.id,
+                name: user.first_name,
+                diamonds: diamonds,
+                income: income
+            })
+        });
+        console.log("Данные сохранены в облако!");
+    } catch (e) {
+        console.error("Ошибка сохранения:", e);
     }
-    updateUI();
 }
 
-function updateUI() {
-    document.getElementById('balance').innerText = diamonds.toFixed(1);
-    document.getElementById('pps').innerText = income;
-    
-    // Сохраняем данные в память телефона
-    localStorage.setItem('diamonds', diamonds);
-    localStorage.setItem('income', income);
-    localStorage.setItem('lastTick', Date.now());
+// Загрузка лидерборда
+async function loadLeaderboard() {
+    const response = await fetch(`${API_URL}/leaderboard`);
+    const players = await response.json();
+    // Тут логика отрисовки списка, которую мы обсуждали раньше
 }
 
-// Клик по кнопке
-document.getElementById('main-clicker').addEventListener('click', () => {
-    diamonds += 1;
-    updateUI();
-});
-
-// Покупка буста
-window.buyBoost = function(power, price) {
-    if (diamonds >= price) {
-        diamonds -= price;
-        income += power;
-        updateUI();
-    } else {
-        alert("Недостаточно алмазов!");
-    }
-};
-
-// Запуск фонового дохода каждую секунду
-setInterval(() => {
-    diamonds += income;
-    updateUI();
-}, 1000);
-
-calculateOffline();
+// Авто-сохранение каждые 60 секунд
+setInterval(syncData, 60000);
