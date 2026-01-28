@@ -4,9 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Diamond Clicker</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    
     <link rel="stylesheet" href="style.css">
     <style>
-        body { text-align: center; background: #1a1a1a; color: white; font-family: sans-serif; }
+        body { text-align: center; background: #1a1a1a; color: white; font-family: sans-serif; margin: 0; padding: 20px; }
         .diamond-clicker { margin: 30px auto; width: 200px; height: 200px; display: flex; align-items: center; justify-content: center; }
         .diamond-clicker img { 
             width: 100%; 
@@ -19,9 +21,12 @@
         .shop { margin-top: 20px; padding: 15px; border: 1px solid #444; display: inline-block; border-radius: 10px; background: #2a2a2a; }
         button { padding: 10px 20px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 5px; font-weight: bold; }
         button:hover { background: #0056b3; }
+        #user-name { color: #0088cc; font-weight: bold; margin-bottom: 10px; }
     </style>
 </head>
 <body>
+
+    <div id="user-name">Загрузка игрока...</div>
 
     <h1>Алмазы: <span id="score">0</span></h1>
     <p>Сила клика: <span id="level">1</span></p>
@@ -39,5 +44,6 @@
     <script src="script.js"></script>
 </body>
 </html>
+
 
 
