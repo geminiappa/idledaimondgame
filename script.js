@@ -61,7 +61,7 @@ async function loadReferrals() {
 }
 
 function inviteFriend() {
-    const botUser = 'ТВОЙ_БОТ_БЕЗ_СОБАКИ'; // Замени на свое
+    const botUser = 'idledaimondbot'; // Замени на свое
     const url = `https://t.me/${botUser}?start=${USER_ID}`;
     tg.openTelegramLink(`https://t.me/share/url?url=${url}&text=Давай копать алмазы со мной! ⛏️`);
 }
@@ -101,6 +101,7 @@ window.onload = () => {
     loadGame();
     document.getElementById('pickaxe-btn').addEventListener('click', doClick);
 };
+
 
 
 
