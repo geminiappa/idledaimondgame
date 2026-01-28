@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Mine Bot</title>
+    <title>Idle Diamond Bot</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -32,37 +32,35 @@
                 <div class="click-card glass">
                     <div class="pickaxe-zone" id="click-zone">
                         <div class="pickaxe-main" id="pickaxe-btn">
-                            <img src="https://i.ibb.co/LzfNf0p/image-7d1561-removebg-preview.png" alt="Diamond Pickaxe">
+                            <img src="https://i.ibb.co/LzfNf0p/image-7d1561-removebg-preview.png" alt="Pickaxe">
                         </div>
                     </div>
                     <div class="card-footer">
                         <div class="stats">
-                            <span>Level: <b id="level">1</b></span>
+                            <span>Уровень: <b id="level">1</b></span>
                             <span>ID: <b id="display-id">...</b></span>
                         </div>
-                        <button class="action-btn">КОПАТЬ!</button>
+                        <button class="action-btn small-mine glass" onclick="doClick()">МАЙН</button>
                     </div>
                 </div>
             </div>
 
             <div id="shop" class="tab-content">
                 <div class="glass menu-card">
-                    <h3>Улучшение кирки</h3>
+                    <h3>Прокачка</h3>
                     <div class="upgrade-item">
-                        <p>Увеличить мощь клика (+1)</p>
-                        <button onclick="buyUpgrade()" class="buy-btn"><span id="upgradeCost">50</span> 💎</button>
+                        <p>Сила клика +1</p>
+                        <button onclick="buyUpgrade()" class="buy-btn glass"><span id="upgradeCost">50</span> 💎</button>
                     </div>
                 </div>
             </div>
 
             <div id="refs" class="tab-content">
                 <div class="glass menu-card">
-                    <h3>Ваша команда: <span id="ref-count">0</span></h3>
-                    <div id="ref-list" class="friends-list">
-                        <p style="opacity:0.5; text-align:center;">Список пуст...</p>
-                    </div>
+                    <h3>Команда: <span id="ref-count">0</span></h3>
+                    <div id="ref-list" class="friends-list"></div>
                 </div>
-                <button class="invite-btn" onclick="inviteFriend()">🤝 Позвать друга (+1000 💎)</button>
+                <button class="invite-btn glass" onclick="inviteFriend()">🤝 Пригласить друга (+1000 💎)</button>
             </div>
         </div>
     </div>
