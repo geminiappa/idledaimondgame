@@ -1,54 +1,38 @@
-// Твоя ссылка на сервер Render
-const API_URL = 'https://idledaimondgame.onrender.com/api'; 
+const API_URL = 'https://idledaimondgame.onrender.com/api';
 let diamonds = 0;
+let upgradeLevel = 1;
 
-// Функция для получения данных при загрузке игры
 async function loadGame() {
-    try {
-        const response = await fetch(`${API_URL}/diamonds`);
-        if (response.ok) {
-            const data = await response.json();
-            diamonds = data.diamonds || 0;
-            updateDisplay();
-        }
-    } catch (err) {
-        console.error("Ошибка загрузки данных:", err);
-    }
+    const res = await fetch(`${API_URL}/diamonds`);
+    const data = await res.json();
+    diamonds = data.diamonds;
+    upgradeLevel = data.upgradeLevel;
+    updateUI();
 }
 
-// Функция клика по алмазу
 async function clickDiamond() {
-    // 1. Сначала визуально прибавляем, чтобы игра не "тормозила"
-    diamonds++;
-    updateDisplay();
+    diamonds += upgradeLevel;
+    updateUI();
+    await fetch(`${API_URL}/click`, { method: 'POST' });
+}
 
-    // 2. Отправляем данные на твой сервер Render
-    try {
-        const response = await fetch(`${API_URL}/click`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ diamonds: 1 }) // Отправляем информацию о клике
-        });
-
-        if (!response.ok) {
-            console.error("Сервер не сохранил клик");
-        }
-    } catch (err) {
-        console.error("Ошибка связи с сервером:", err);
+async function buyUpgrade() {
+    const res = await fetch(`${API_URL}/upgrade`, { method: 'POST' });
+    if (res.ok) {
+        const data = await res.json();
+        diamonds = data.diamonds;
+        upgradeLevel = data.upgradeLevel;
+        updateUI();
+    } else {
+        alert("Недостаточно алмазов!");
     }
 }
 
-function updateDisplay() {
-    const scoreElement = document.getElementById('score');
-    if (scoreElement) {
-        scoreElement.innerText = diamonds;
-    }
+function updateUI() {
+    document.getElementById('score').innerText = Math.floor(diamonds);
+    document.getElementById('upgradeCost').innerText = upgradeLevel * 50;
+    document.getElementById('level').innerText = upgradeLevel;
 }
 
-// Запускаем загрузку при старте
-loadGame();
+window.onload = loadGame;
 
-// Привязываем функцию к алмазу (убедись, что у алмаза в HTML есть id="diamond")
-document.getElementById('diamond').addEventListener('click', clickDiamond);
