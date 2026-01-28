@@ -75,7 +75,7 @@ async function buyUpgrade() {
 // Система рефералов
 function inviteFriend() {
     // ВПИШИ ЮЗЕРНЕЙМ БОТА НИЖЕ (без @)
-    const botUsername = 'ТВОЙ_БОТ_USERNAME'; 
+    const botUsername = 'idledaimondbot'; 
     const shareLink = `https://t.me/share/url?url=https://t.me/${botUsername}?start=${USER_ID}&text=Погнали копать алмазы вместе! ⛏️💎`;
     tg.openTelegramLink(shareLink);
 }
@@ -123,6 +123,7 @@ window.onload = () => {
     loadGame();
     document.getElementById('pickaxe-btn').addEventListener('click', handlePickaxeClick);
 };
+
 
 
 
