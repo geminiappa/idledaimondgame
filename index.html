@@ -5,18 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Idle Diamond Game</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Добавим стили прямо сюда, чтобы картинка точно была видна */
+        .diamond-clicker img {
+            width: 150px;
+            cursor: pointer;
+            transition: transform 0.1s;
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+        .diamond-clicker img:active { transform: scale(0.9); }
+    </style>
 </head>
 <body>
-    <div class="game-container">
-        <h1>Твои Алмазы: <span id="score">0</span></h1>
+    <div class="game-container" style="text-align: center; margin-top: 50px;">
+        <h1>Алмазы: <span id="score">0</span></h1>
         
         <div id="diamond" class="diamond-clicker">
-            <img src="https://img.icons8.com/emoji/96/gem-stone-emoji.png" alt="Diamond">
+            <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/main/Objects/Gem%20Stone.png" alt="Diamond">
         </div>
 
-        <p>Нажимай на алмаз, чтобы копать!</p>
+        <p>Нажимай на алмаз!</p>
     </div>
 
     <script src="script.js"></script>
 </body>
 </html>
+
