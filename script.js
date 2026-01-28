@@ -1,16 +1,14 @@
 const tg = window.Telegram.WebApp;
 tg.expand();
 
-// Получаем данные пользователя
 const USER_ID = tg.initDataUnsafe?.user?.id?.toString() || 'guest';
-const FIRST_NAME = tg.initDataUnsafe?.user?.first_name || "Шахтер";
+const FIRST_NAME = tg.initDataUnsafe?.user?.first_name || "Miner";
 const REF_ID = tg.initDataUnsafe?.start_param || null;
 
 const API_URL = 'https://idledaimondgame.onrender.com/api';
 let diamonds = 0;
 let upgradeLevel = 1;
 
-// Загрузка состояния игры
 async function loadGame() {
     try {
         const res = await fetch(`${API_URL}/diamonds?userId=${USER_ID}&refId=${REF_ID}`);
@@ -19,40 +17,63 @@ async function loadGame() {
         upgradeLevel = data.upgradeLevel;
         document.getElementById('display-id').innerText = USER_ID;
         updateUI();
-    } catch (e) { console.error("Ошибка загрузки:", e); }
+    } catch (e) { console.error("Load error:", e); }
 }
 
-// Анимация вылетающей цифры
-function playPopAnimation() {
+function playAnim() {
     const zone = document.getElementById('click-zone');
     const pop = document.createElement('div');
     pop.className = 'pop-text';
     pop.innerText = `+${upgradeLevel}`;
-    
-    // Центрируем над киркой
     pop.style.left = `calc(50% - 15px)`;
-    pop.style.top = `35%`;
-    
+    pop.style.top = `40%`;
     zone.appendChild(pop);
-    setTimeout(() => pop.remove(), 600);
+    setTimeout(() => pop.remove(), 700);
 }
 
-// Клик по кирке
-async function handlePickaxeClick() {
+async function doClick() {
     diamonds += upgradeLevel;
     updateUI();
-    playPopAnimation();
-    
+    playAnim();
     try {
         await fetch(`${API_URL}/click`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ userId: USER_ID, amount: upgradeLevel })
         });
-    } catch (e) { console.error("Ошибка клика:", e); }
+    } catch (e) { console.error("Click error:", e); }
 }
 
-// Покупка апгрейда
+async function loadReferrals() {
+    const list = document.getElementById('ref-list');
+    try {
+        const res = await fetch(`${API_URL}/referrals?userId=${USER_ID}`);
+        const friends = await res.json();
+        document.getElementById('ref-count').innerText = friends.length;
+        list.innerHTML = friends.length ? '' : '<p style="opacity:0.5; text-align:center;">Пока никто не пришел...</p>';
+        friends.forEach(f => {
+            const div = document.createElement('div');
+            div.className = 'ref-item';
+            div.innerHTML = `👤 Шахтер #${f.userId.slice(-4)} <span>+1000 💎</span>`;
+            list.appendChild(div);
+        });
+    } catch (e) { list.innerHTML = 'Ошибка сети'; }
+}
+
+function inviteFriend() {
+    const botUser = 'ТВОЙ_БОТ_БЕЗ_СОБАКИ'; // Замени на свое
+    const url = `https://t.me/${botUser}?start=${USER_ID}`;
+    tg.openTelegramLink(`https://t.me/share/url?url=${url}&text=Давай копать алмазы со мной! ⛏️`);
+}
+
+function showTab(tabId, btn) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-link').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    btn.classList.add('active');
+    if (tabId === 'refs') loadReferrals();
+}
+
 async function buyUpgrade() {
     try {
         const res = await fetch(`${API_URL}/upgrade`, {
@@ -60,55 +81,13 @@ async function buyUpgrade() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ userId: USER_ID })
         });
-        
         if (res.ok) {
             const data = await res.json();
             diamonds = data.diamonds;
             upgradeLevel = data.upgradeLevel;
             updateUI();
-        } else {
-            tg.showAlert("Недостаточно алмазов! Продолжай копать.");
-        }
-    } catch (e) { console.error("Ошибка апгрейда:", e); }
-}
-
-// Система рефералов
-function inviteFriend() {
-    // ВПИШИ ЮЗЕРНЕЙМ БОТА НИЖЕ (без @)
-    const botUsername = 'idledaimondbot'; 
-    const shareLink = `https://t.me/share/url?url=https://t.me/${botUsername}?start=${USER_ID}&text=Погнали копать алмазы вместе! ⛏️💎`;
-    tg.openTelegramLink(shareLink);
-}
-
-// Загрузка списка друзей
-async function loadReferrals() {
-    const list = document.getElementById('ref-list');
-    try {
-        const res = await fetch(`${API_URL}/referrals?userId=${USER_ID}`);
-        const friends = await res.json();
-        document.getElementById('ref-count').innerText = friends.length;
-        
-        list.innerHTML = friends.length ? '' : '<p style="opacity:0.5">У тебя пока нет друзей в шахте...</p>';
-        
-        friends.forEach(f => {
-            const div = document.createElement('div');
-            div.className = 'ref-item';
-            div.innerHTML = `👤 Шахтер #${f.userId.slice(-4)} <span>+1000 💎</span>`;
-            list.appendChild(div);
-        });
-    } catch (e) { list.innerHTML = 'Ошибка загрузки друзей'; }
-}
-
-// Переключение вкладок
-function showTab(tabId, btn) {
-    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.tab-link').forEach(b => b.classList.remove('active'));
-    document.getElementById(tabId).classList.add('active');
-    btn.classList.add('active');
-    
-    if (tabId === 'refs') {
-        loadReferrals();
-    }
+        } else { tg.showAlert("Нужно больше алмазов!"); }
+    } catch (e) { console.error(e); }
 }
 
 function updateUI() {
@@ -118,10 +97,9 @@ function updateUI() {
     document.getElementById('user-name').innerText = FIRST_NAME;
 }
 
-// Инициализация при загрузке
 window.onload = () => {
     loadGame();
-    document.getElementById('pickaxe-btn').addEventListener('click', handlePickaxeClick);
+    document.getElementById('pickaxe-btn').addEventListener('click', doClick);
 };
 
 
