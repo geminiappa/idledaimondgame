@@ -6,11 +6,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Твоя база MongoDB
 const mongoURI = 'mongodb+srv://admin:Dapo2026@idlegamebot.jxmmirj.mongodb.net/myGameDatabase?retryWrites=true&w=majority';
 
 mongoose.connect(mongoURI)
-    .then(() => console.log('✅ MongoDB Connected'))
-    .catch(err => console.error('❌ Connection Error:', err));
+    .then(() => console.log('✅ База подключена'))
+    .catch(err => console.error('❌ Ошибка базы:', err));
 
 const playerSchema = new mongoose.Schema({
     userId: { type: String, required: true, unique: true },
@@ -21,7 +22,7 @@ const playerSchema = new mongoose.Schema({
 
 const Player = mongoose.model('Player', playerSchema);
 
-// Загрузка игрока и фиксация реферала
+// Основной эндпоинт загрузки данных
 app.get('/api/diamonds', async (req, res) => {
     const { userId, refId } = req.query;
     try {
@@ -42,7 +43,6 @@ app.get('/api/diamonds', async (req, res) => {
     } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-// Клик
 app.post('/api/click', async (req, res) => {
     const { userId, amount } = req.body;
     try {
@@ -55,7 +55,6 @@ app.post('/api/click', async (req, res) => {
     } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-// Апгрейд
 app.post('/api/upgrade', async (req, res) => {
     const { userId } = req.body;
     try {
@@ -66,11 +65,10 @@ app.post('/api/upgrade', async (req, res) => {
             player.upgradeLevel += 1;
             await player.save();
             res.json(player);
-        } else { res.status(400).json({ error: 'Low balance' }); }
+        } else { res.status(400).json({ error: 'Баланс мал' }); }
     } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-// Список рефералов
 app.get('/api/referrals', async (req, res) => {
     const { userId } = req.query;
     try {
@@ -80,4 +78,6 @@ app.get('/api/referrals', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 10000;
+app.listen(PORT, () => console.log(`🚀 Сервер на порту ${PORT}`));
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+
