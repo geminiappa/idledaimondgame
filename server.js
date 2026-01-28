@@ -10,7 +10,7 @@ app.use(express.json());
 
 // --- НАСТРОЙКА БАЗЫ ДАННЫХ ---
 // Замени 'ССЫЛКА_ИЗ_MONGODB_ATLAS' на свою реальную строку подключения
-const mongoURI = 'mongodb+srv://admin:<Dapo321@#$>@idlegamebot.jxmmirj.mongodb.net/?appName=idlegamebot'; 
+const mongoURI = 'mongodb+srv://admin:Dapo2026@idlegamebot.jxmmirj.mongodb.net/?retryWrites=true&w=majority'; 
 
 mongoose.connect(mongoURI)
     .then(() => console.log('✅ MongoDB подключена!'))
@@ -62,3 +62,4 @@ app.listen(PORT, () => {
     console.log(`🚀 Сервер запущен на порту ${PORT}`);
 
 });
+
