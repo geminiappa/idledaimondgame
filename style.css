@@ -1,81 +1,72 @@
 body {
     margin: 0; background: #000; color: #fff;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
+    font-family: 'Inter', -apple-system, sans-serif;
     height: 100vh; overflow: hidden;
-    user-select: none;
 }
 
 .mine-bg {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), 
-                url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=2000');
-    background-size: cover; background-position: center; z-index: -1;
+    background: url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=2000');
+    background-size: cover; background-position: center; z-index: -2;
 }
 
-.app { padding: 15px; display: flex; flex-direction: column; height: 100%; box-sizing: border-box; }
+.glass-overlay {
+    height: 100%; width: 100%;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(10px);
+    display: flex; justify-content: center;
+}
+
+.app-container {
+    width: 90%; max-width: 420px; padding: 25px 0;
+    display: flex; flex-direction: column;
+}
 
 .glass {
     background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 20px;
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 24px;
 }
 
-.user-bar { display: flex; align-items: center; padding: 10px 15px; gap: 10px; margin-bottom: 15px; font-size: 14px; }
-.avatar { width: 22px; border-radius: 50%; }
+.header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 30px; }
+.balance-info p { margin: 0; opacity: 0.7; font-size: 14px; }
+.balance-info h1 { margin: 5px 0; font-size: 52px; color: #00d4ff; text-shadow: 0 0 20px rgba(0, 212, 255, 0.4); }
 
-.score-container { text-align: center; margin-bottom: 20px; }
-.score-container h1 { font-size: 48px; margin: 0; color: #00d4ff; text-shadow: 0 0 20px rgba(0,212,255,0.4); }
-.subtitle { opacity: 0.6; font-size: 14px; margin-top: 5px; }
+.user-chip { display: flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 30px; font-size: 14px; }
+.avatar { width: 28px; border-radius: 50%; }
 
-.tabs-nav { display: flex; padding: 5px; margin-bottom: 20px; }
-.tab-link { flex: 1; background: none; border: none; color: #888; padding: 12px; border-radius: 15px; font-weight: bold; }
-.tab-link.active { background: rgba(0, 212, 255, 0.15); color: #00d4ff; }
+.tabs-nav { display: flex; gap: 10px; padding: 6px; margin-bottom: 25px; }
+.tab-link { flex: 1; border: none; background: transparent; color: #aaa; padding: 12px; border-radius: 16px; font-weight: bold; font-size: 14px; }
+.tab-link.active { background: #fff; color: #000; }
 
-.tab-content { display: none; flex-direction: column; height: 100%; }
+.tab-content { display: none; flex-direction: column; flex-grow: 1; }
 .tab-content.active { display: flex; }
 
-/* ПЛИТКА КИРКИ */
-.click-tile {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    margin-bottom: 20px;
-}
+.click-card { flex-grow: 1; display: flex; flex-direction: column; padding: 25px; }
+.pickaxe-zone { flex-grow: 1; display: flex; align-items: center; justify-content: center; position: relative; }
 
-.pickaxe-wrapper { 
-    width: 150px; height: 150px; 
-    cursor: pointer; 
-    transition: transform 0.05s ease;
-}
-.pickaxe-wrapper img { 
-    width: 100%; 
-    filter: drop-shadow(0 0 15px rgba(255,255,255,0.2));
-}
-.pickaxe-wrapper:active { transform: scale(0.9) rotate(-10deg); }
+.pickaxe-main { width: 230px; cursor: pointer; transition: transform 0.1s; }
+.pickaxe-main img { width: 100%; filter: drop-shadow(0 0 30px rgba(0, 212, 255, 0.5)); }
+.pickaxe-main:active { transform: scale(0.9) rotate(-10deg); }
+
+.card-footer { margin-top: 20px; display: flex; justify-content: space-between; align-items: center; }
+.stats { display: flex; flex-direction: column; gap: 4px; font-size: 13px; opacity: 0.6; }
+
+.action-btn { background: #fff; color: #000; border: none; padding: 14px 28px; border-radius: 30px; font-weight: 800; font-size: 15px; }
 
 /* Анимация +1 */
 .pop-text {
-    position: absolute; color: #00d4ff; font-weight: 900; font-size: 28px;
-    pointer-events: none; animation: popUp 0.6s ease-out forwards;
+    position: absolute; color: #00d4ff; font-weight: 900; font-size: 32px;
+    pointer-events: none; animation: flyUp 0.7s ease-out forwards;
 }
+@keyframes flyUp { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-120px); opacity: 0; } }
 
-@keyframes popUp {
-    0% { transform: translateY(0); opacity: 1; }
-    100% { transform: translateY(-100px); opacity: 0; }
-}
+.menu-card { padding: 25px; }
+.upgrade-item { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; }
+.buy-btn { background: #00d4ff; color: #000; border: none; padding: 10px 20px; border-radius: 14px; font-weight: bold; }
 
-.action-btn { padding: 20px; border: none; border-radius: 18px; font-weight: 900; font-size: 16px; width: 100%; }
-.mine-btn { background: #f1c40f; color: #000; box-shadow: 0 5px 20px rgba(241,196,15,0.3); }
-.ref-btn { background: #27ae60; color: #fff; margin-top: auto; }
-
-.card { padding: 20px; margin-bottom: 10px; }
-.row { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; }
-.buy-btn { background: #00d4ff; border: none; padding: 10px 20px; border-radius: 12px; font-weight: bold; color: #000; }
-
-.scroll-list { max-height: 180px; overflow-y: auto; margin-top: 15px; }
-.ref-item { background: rgba(255,255,255,0.05); padding: 12px; border-radius: 12px; margin-bottom: 8px; display: flex; justify-content: space-between; font-size: 14px; border-left: 4px solid #27ae60; }
+.invite-btn { background: #27ae60; color: #fff; border: none; padding: 20px; border-radius: 20px; font-weight: 800; font-size: 16px; width: 100%; margin-top: auto; }
+.friends-list { max-height: 250px; overflow-y: auto; margin-top: 15px; }
+.ref-item { background: rgba(255,255,255,0.05); padding: 14px; border-radius: 16px; margin-bottom: 10px; display: flex; justify-content: space-between; font-size: 14px; border-left: 4px solid #27ae60; }
 
