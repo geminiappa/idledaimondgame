@@ -1,43 +1,73 @@
-<div class="tabs-nav">
-    <button class="tab-link active" onclick="showTab('mine', this)">⛏️ Шахта</button>
-    <button class="tab-link" onclick="showTab('shop', this)">🚀 Бусты</button>
-    <button class="tab-link" onclick="showTab('refs', this)">👥 Друзья</button>
-</div>
-
-<div id="mine" class="tab-content active">
-    <div class="glass-card main-card">
-        <div class="diamond-box" id="diamond">
-            <img src="https://cdn-icons-png.flaticon.com/512/599/599405.png" alt="Diamond">
-        </div>
-        <div class="card-info">
-            <div>Твой ID: <span class="id-text" id="display-id">...</span></div>
-            <button class="mine-btn">Копать!</button>
-        </div>
-    </div>
-</div>
-
-<div id="shop" class="tab-content">
-    <div class="glass-card">
-        <h3>Улучшения</h3>
-        <div class="upgrade-row">
-            <span>Прокачка кирки</span>
-            <button onclick="buyUpgrade()" class="buy-action"><span id="upgradeCost">50</span> 💎</button>
-        </div>
-    </div>
-</div>
-
-<div id="refs" class="tab-content">
-    <div class="glass-card">
-        <h3>Твои рефералы: <span id="ref-count">0</span></h3>
-        <div id="ref-list" class="ref-list-container">
-            <p style="opacity: 0.5;">Список пуст...</p>
-        </div>
-    </div>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Diamond Mine</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="mine-bg"></div>
     
-    <button class="ref-btn" onclick="inviteFriend()">
-        🤝 Пригласить друга (+1000 💎)
-    </button>
-</div>
+    <div class="app">
+        <div class="user-bar">
+            <img src="https://cdn-icons-png.flaticon.com/512/147/147144.png" class="avatar">
+            <div id="user-name">Загрузка...</div>
+        </div>
+
+        <div class="score-container">
+            <h1>Diamond: <span id="score">0</span></h1>
+            <div class="subtitle">Сила клика: 💎 Level <span id="level">1</span></div>
+        </div>
+
+        <div class="tabs-nav">
+            <button class="tab-link active" onclick="showTab('mine', this)">⛏️ Шахта</button>
+            <button class="tab-link" onclick="showTab('shop', this)">🚀 Бусты</button>
+            <button class="tab-link" onclick="showTab('refs', this)">👥 Друзья</button>
+        </div>
+
+        <div id="mine" class="tab-content active">
+            <div class="glass-card main-card">
+                <div class="diamond-box" id="diamond">
+                    <img src="https://cdn-icons-png.flaticon.com/512/599/599405.png" alt="Diamond">
+                </div>
+                <div class="card-info">
+                    <div>Score + ID: <span id="display-id">...</span></div>
+                    <button class="mine-btn">Mine button</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="shop" class="tab-content">
+            <div class="glass-card">
+                <h3>Магазин улучшений</h3>
+                <div class="upgrade-row">
+                    <span>Улучшить кирку</span>
+                    <button onclick="buyUpgrade()" class="buy-action"><span id="upgradeCost">50</span> 💎</button>
+                </div>
+            </div>
+            <div class="glass-card bonus-card">
+                <h3>Бонусы</h3>
+                <p>Прокачивай уровень, чтобы копать быстрее!</p>
+            </div>
+        </div>
+
+        <div id="refs" class="tab-content">
+            <div class="glass-card">
+                <h3>Твои друзья: <span id="ref-count">0</span></h3>
+                <div id="ref-list" class="ref-list-container">
+                    <p style="opacity: 0.5;">Загрузка списка...</p>
+                </div>
+            </div>
+            <button class="ref-btn" onclick="inviteFriend()">🤝 Пригласить друга (+1000 💎)</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
 
 
 
