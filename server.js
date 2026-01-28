@@ -3,61 +3,49 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 
 const app = express();
-app.use(cors()); // Разрешаем запросы с других доменов (Vercel)
+app.use(cors());
 app.use(express.json());
 
-// Твоя исправленная ссылка (БЕЗ скобок < >)
 const mongoURI = 'mongodb+srv://admin:Dapo321@#$@idlegamebot.jxmmirj.mongodb.net/?retryWrites=true&w=majority';
 
 mongoose.connect(mongoURI)
     .then(() => console.log('✅ MongoDB подключена!'))
-    .catch(err => console.error('❌ Ошибка подключения к БД:', err));
+    .catch(err => console.error('❌ Ошибка подключения:', err));
 
-// Схема данных игрока
 const playerSchema = new mongoose.Schema({
     userId: { type: String, default: 'guest' },
-    diamonds: { type: Number, default: 0 }
+    diamonds: { type: Number, default: 0 },
+    upgradeLevel: { type: Number, default: 1 } // Твой буст
 });
 
 const Player = mongoose.model('Player', playerSchema);
 
-// Маршрут для получения количества алмазов
 app.get('/api/diamonds', async (req, res) => {
-    try {
-        let player = await Player.findOne({ userId: 'guest' });
-        if (!player) {
-            player = await Player.create({ userId: 'guest', diamonds: 0 });
-        }
-        res.json(player);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+    let player = await Player.findOne({ userId: 'guest' }) || await Player.create({ userId: 'guest' });
+    res.json(player);
 });
 
-// Маршрут для сохранения клика
 app.post('/api/click', async (req, res) => {
-    try {
-        let player = await Player.findOne({ userId: 'guest' });
-        if (!player) {
-            player = await Player.create({ userId: 'guest', diamonds: 1 });
-        } else {
-            player.diamonds += 1;
-            await player.save();
-        }
+    let player = await Player.findOne({ userId: 'guest' });
+    if (player) {
+        player.diamonds += player.upgradeLevel; // Клик зависит от уровня буста
+        await player.save();
         res.json(player);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
     }
 });
 
-// Тестовый маршрут для проверки работы сервера
-app.get('/', (req, res) => {
-    res.send('🚀 Сервер игры работает и готов принимать клики!');
+app.post('/api/upgrade', async (req, res) => {
+    let player = await Player.findOne({ userId: 'guest' });
+    const cost = player.upgradeLevel * 50; // Цена буста
+    if (player.diamonds >= cost) {
+        player.diamonds -= cost;
+        player.upgradeLevel += 1;
+        await player.save();
+        res.json(player);
+    } else {
+        res.status(400).json({ error: 'Недостаточно алмазов' });
+    }
 });
 
-const PORT = process.env.PORT || 10000;
-app.listen(PORT, () => {
-    console.log(`🚀 Сервер запущен на порту ${PORT}`);
-});
-
+app.listen(process.env.PORT || 10000);
 
