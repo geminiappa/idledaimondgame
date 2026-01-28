@@ -1,37 +1,54 @@
-const tg = window.Telegram.WebApp;
-const user = tg.initDataUnsafe?.user || { id: 0, first_name: "Guest" };
+// Твоя ссылка на сервер Render
+const API_URL = 'https://idledaimondgame.onrender.com/api'; 
+let diamonds = 0;
 
-// ССЫЛКА НА ТВОЙ СЕРВЕР (замени после деплоя на Render)
-const API_URL = 'https://idledaimondgame.onrender.com/api';
-
-let diamonds = parseFloat(localStorage.getItem('diamonds')) || 0;
-let income = parseFloat(localStorage.getItem('income')) || 0;
-
-// Синхронизация с сервером (сохранение)
-async function syncData() {
+// Функция для получения данных при загрузке игры
+async function loadGame() {
     try {
-        await fetch(`${API_URL}/sync`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                tgId: user.id,
-                name: user.first_name,
-                diamonds: diamonds,
-                income: income
-            })
-        });
-        console.log("Данные сохранены в облако!");
-    } catch (e) {
-        console.error("Ошибка сохранения:", e);
+        const response = await fetch(`${API_URL}/diamonds`);
+        if (response.ok) {
+            const data = await response.json();
+            diamonds = data.diamonds || 0;
+            updateDisplay();
+        }
+    } catch (err) {
+        console.error("Ошибка загрузки данных:", err);
     }
 }
 
-// Загрузка лидерборда
-async function loadLeaderboard() {
-    const response = await fetch(`${API_URL}/leaderboard`);
-    const players = await response.json();
-    // Тут логика отрисовки списка, которую мы обсуждали раньше
+// Функция клика по алмазу
+async function clickDiamond() {
+    // 1. Сначала визуально прибавляем, чтобы игра не "тормозила"
+    diamonds++;
+    updateDisplay();
+
+    // 2. Отправляем данные на твой сервер Render
+    try {
+        const response = await fetch(`${API_URL}/click`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ diamonds: 1 }) // Отправляем информацию о клике
+        });
+
+        if (!response.ok) {
+            console.error("Сервер не сохранил клик");
+        }
+    } catch (err) {
+        console.error("Ошибка связи с сервером:", err);
+    }
 }
 
-// Авто-сохранение каждые 60 секунд
-setInterval(syncData, 60000);
+function updateDisplay() {
+    const scoreElement = document.getElementById('score');
+    if (scoreElement) {
+        scoreElement.innerText = diamonds;
+    }
+}
+
+// Запускаем загрузку при старте
+loadGame();
+
+// Привязываем функцию к алмазу (убедись, что у алмаза в HTML есть id="diamond")
+document.getElementById('diamond').addEventListener('click', clickDiamond);
