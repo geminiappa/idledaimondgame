@@ -6,12 +6,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Твоя база MongoDB
+// Подключение к твоей базе MongoDB
 const mongoURI = 'mongodb+srv://admin:Dapo2026@idlegamebot.jxmmirj.mongodb.net/myGameDatabase?retryWrites=true&w=majority';
 
 mongoose.connect(mongoURI)
-    .then(() => console.log('✅ База подключена'))
-    .catch(err => console.error('❌ Ошибка базы:', err));
+    .then(() => console.log('✅ MongoDB подключена'))
+    .catch(err => console.error('❌ Ошибка подключения:', err));
 
 const playerSchema = new mongoose.Schema({
     userId: { type: String, required: true, unique: true },
@@ -22,7 +22,7 @@ const playerSchema = new mongoose.Schema({
 
 const Player = mongoose.model('Player', playerSchema);
 
-// Основной эндпоинт загрузки данных
+// Загрузка данных игрока и проверка реферала
 app.get('/api/diamonds', async (req, res) => {
     const { userId, refId } = req.query;
     try {
@@ -40,9 +40,12 @@ app.get('/api/diamonds', async (req, res) => {
             await player.save();
         }
         res.json(player);
-    } catch (e) { res.status(500).json({ error: e.message }); }
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
 });
 
+// Клик по алмазу
 app.post('/api/click', async (req, res) => {
     const { userId, amount } = req.body;
     try {
@@ -52,9 +55,12 @@ app.post('/api/click', async (req, res) => {
             { new: true, upsert: true }
         );
         res.json(player);
-    } catch (e) { res.status(500).json({ error: e.message }); }
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
 });
 
+// Покупка улучшения
 app.post('/api/upgrade', async (req, res) => {
     const { userId } = req.body;
     try {
@@ -65,19 +71,29 @@ app.post('/api/upgrade', async (req, res) => {
             player.upgradeLevel += 1;
             await player.save();
             res.json(player);
-        } else { res.status(400).json({ error: 'Баланс мал' }); }
-    } catch (e) { res.status(500).json({ error: e.message }); }
+        } else {
+            res.status(400).json({ error: 'Недостаточно средств' });
+        }
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
 });
 
+// Список приглашенных друзей
 app.get('/api/referrals', async (req, res) => {
     const { userId } = req.query;
     try {
         const friends = await Player.find({ referredBy: userId });
         res.json(friends);
-    } catch (e) { res.status(500).json({ error: e.message }); }
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
 });
 
+// ПРАВИЛЬНЫЙ ЗАПУСК ДЛЯ RENDER
 const PORT = process.env.PORT || 10000;
-app.listen(PORT, () => console.log(`🚀 Сервер на порту ${PORT}`));
-app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`🚀 Сервер запущен и слушает порт ${PORT}`);
+});
+
 
